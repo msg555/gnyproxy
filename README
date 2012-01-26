@@ -1,0 +1,44 @@
+Compiling the code:
+  A simple 'make' command should compile all of the code.
+
+Running the code:
+  All protocol specifications should be one of the following:
+    11 - HTTP/1.1
+    m11 - Multiplexed HTTP/1.1
+    gny - HTTP/GNY
+    mgny - Multiplexed HTTP/GNY
+
+  The binaries can be used as follows:
+
+  ./proxy INPUTPROTOCOL OUTPUTPROTOCOL PORT
+     Setup proxy to read in INPUTPROTOCOL and connect to the requested servers
+     using OUTPUTPROTOCOL.  The proxy will listen on PORT.
+
+  ./proxy INPUTPROTOCOL OUTPUTPROTOCOL PORT FORWARDHOST FORWARDPORT
+     Setup proxy to read in INPUTPROTOCOL and forward messages to
+     FORWARDHOST:FORWARDPORT using OUTPUTPROTOCOL.
+     The proxy will listen on PORT.
+
+  ./http_server PROTOCOL PORT BASE_PATH
+     This runs an http server that just serves files located in the directory
+     BASE_PATH.  The http server will use the protocol specified by PROTOCOL.
+
+  ./request_gen PROTOCOL DEST_HOST DEST_PORT MAX_CONNECTIONS
+     Reads request urls from standard in and sends them to the
+     DEST_HOST:DEST_PORT using protocol PROTOCOL.  request_gen will not
+     establish more than MAX_CONNECTION TCP connections.
+
+  To test http_server and request_gen you might do something like this.
+    $ echo 'simple_file' > my_url
+    $ echo /my_url > my_test
+    $ ./http_server  mgny 1234 . &
+    $ ./request_gen mgny localhost 1234 1
+
+  To test the proxy using gny you might do something like this.
+    Local terminal
+    $ ./proxy 11 mgny 1234 remote_host 1234
+
+    Remote terminal
+    $ ./proxy mgny 11 1234
+
+    Then you would configure your browser to use the http proxy on localhost:1234

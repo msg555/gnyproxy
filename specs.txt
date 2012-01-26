@@ -1,0 +1,89 @@
+Multiplexing layer
+- ID: 1 or 2 bytes
+- Size: 2 bytes
+- Data: our HTTP
+
++----------+
+| 1 byte   |  ID
++----------+
+| 2 bytes  | size
++----------+
+|          |
+| variable | data
+|          |
++----------+
+
+Client:
+pick any free ID number that doesn't have a request pending
+
+Server:
+respond with same ID
+
+IDs are uniquely maintained between client-server pairs
+
+Size is data size.  Size is limited by size of 2 bytes.
+Maybe we can specify a special case with size = 0 => max size?  To be better defined...
+
+HTTP Layer:
+-Request/Response
+    -Request:
+        -Verb: 1 byte
+        -url: null terminated
+    -Response:
+        -Response code: 2 byte (we could do 1 byte, but would have to remap the response code)
+-(no content length field)
+-
+
+HTTP Request/Response protocol
++-----------------------+
+| Request/Response Line |
++-----------------------+
+|        Headers        |
++-----------------------+
+|         Entity        |
++-----------------------+
+|        Headers        |
++-----------------------+
+
+Request Line
++----------------+
+| 1 byte: Verb   |
++----------------+
+| Null term: Url |
++----------------+
+
+Response Line
++------------------------+
+| 2 bytes: Response Code |
++------------------------+
+
+Headers
++----------------+ }
+| 1 byte: flag   | }
++----------------+ } Repeated until flag = KEY_DONE
+| Header Data    | }
++----------------+ }
+
+Header Data (flag = KEY_DONE)
++----------------+
+| No data        |
++----------------+
+
+Header Data (flag = KEY_USER)
++------------------+
+| Null term: key   |
++------------------+
+| Null term: value |
++------------------+
+
+Header Data (flag != KEY_DONE && flag != KEY_USER)
++------------------+
+| Null term: key   |
++------------------+
+
+Entity
++------------------+ }
+| 2 bytes: size    | }
++------------------+ } Repeated until size = 0
+| size bytes: data | }
++------------------+ } 

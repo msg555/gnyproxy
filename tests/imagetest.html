@@ -1,0 +1,31 @@
+<html>
+    <body>
+        <script type="text/javascript">
+            function genimages(form)
+            {
+                var count = form.count.value;
+                var size = form.size.value;
+                var i = 0;
+document.open();
+                for(i = 0; i < count; i++)
+                {
+                    document.write("<img src='images/" + size + "/" + size +
+                                    ".bmp?" + i + "' style='visibility: hidden'/>");
+                }
+document.close();
+            }
+        </script>
+        <form>
+            number of images to generate
+            <input type="text" value="0" name="count"/>
+            <select name="size">
+              <option>small</option>
+              <option>medsmall</option>
+              <option>med</option>
+              <option>medlarge</option>
+              <option>large</option>
+            </select>
+            <input type="button" value="generate" onclick="genimages(this.form)"/>
+        </form>
+    </body>
+</html>
